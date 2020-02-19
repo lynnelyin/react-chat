@@ -30,7 +30,7 @@ class AuthRoute extends React.Component {
     })
   }
   render() {
-    return <p>判断路由跳转的地方</p>
+    return null
   }
 }
 
