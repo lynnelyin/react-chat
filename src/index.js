@@ -10,6 +10,7 @@ import Login from './container/login/login'
 import Register from './container/register/register'
 import BossInfo from './container/bossinfo/bossinfo'
 import GeniusInfo from './container/geniusinfo/geniusinfo'
+import DashBoard from './component/dashboard/dashboard'
 import AuthRoute from './component/authroute/authroute'
 import './config'
 import 'antd-mobile/dist/antd-mobile.css'
@@ -30,6 +31,7 @@ ReactDom.render(<Provider store={store}>
                         <Route path="/geniusinfo" component={GeniusInfo} />
                         <Route path="/register" component={Register} />
                         <Route path="/login" component={Login} />
+                        <Route component={DashBoard} />
                       </Switch>
                     </div>
                   </BrowserRouter>

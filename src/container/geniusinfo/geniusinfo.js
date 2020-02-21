@@ -33,7 +33,7 @@ class GeniusInfo extends React.Component {
           })
         }}></AvatarSelector>
         <InputItem onChange={v => this.onChange('title', v)}>
-          招聘职位
+          应聘职位
         </InputItem>
         <TextareaItem 
           onChange={v => this.onChange('desc', v)}
