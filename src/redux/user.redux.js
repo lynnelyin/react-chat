@@ -2,6 +2,7 @@ import axios from "axios"
 import { getRedirectPath } from '../util'
 
 const AUTH_SUCCESS = 'AUTH_SUCCESS'
+const LOGOUT = 'LOGOUT'
 const LOAD_DATA = 'LOAD_DATA'
 const ERROR_MSG = 'ERROR_MSG'
 
@@ -21,6 +22,8 @@ export function user(state=initState, action) {
       return {...state, ...action.payload}
     case ERROR_MSG:
       return {...state, isAuth: false, msg: action.msg}
+    case LOGOUT:
+      return {...initState, redirectTo: '/login'}
     default:
       return state
   }
@@ -49,6 +52,10 @@ export function update(data) {
       }
     })
   }
+}
+
+export function logoutSubmit() {
+  return {type: LOGOUT}
 }
 
 export function login({user, pwd}) {
@@ -85,4 +92,3 @@ export function register({user, pwd, repeatPwd, type}) {
           })
   }
 }
-
