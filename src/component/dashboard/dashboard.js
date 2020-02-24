@@ -6,7 +6,6 @@ import { Switch, Route } from 'react-router-dom'
 import Boss from '../boss/boss'
 import Genius from '../genius/genius'
 import User from '../user/user'
-import '../../index.css'
 
 function Msg() {
   return <h2>消息列表页面</h2>
