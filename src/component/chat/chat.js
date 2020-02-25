@@ -1,23 +1,34 @@
 import React from 'react'
-import { List, InputItem, NavBar } from 'antd-mobile'
+import { List, InputItem, NavBar, Icon, Grid } from 'antd-mobile'
 import { connect } from 'react-redux'
-import { getMsgList, sendMsg, recvMsg } from '../../redux/chat.redux'
-import io from 'socket.io-client'
+import { sendMsg, getMsgList, recvMsg } from '../../redux/chat.redux'
+import { getChatId } from '../../util'
 
 @connect(
   state => state,
-  {getMsgList, sendMsg, recvMsg}
+  {sendMsg, getMsgList, recvMsg}
 )
 class Chat extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {text: ''}
+    this.state = {text: '', showEmoji: false}
   }
   componentDidMount() {
-    this.props.getMsgList()
-    this.props.recvMsg()
+    // 刷新页面时重新发送请求获取消息列表
+    if (!this.props.chat.chatMsg.length) {
+      this.props.getMsgList()
+      this.props.recvMsg()
+    }
+  }
+  // 修复一开始网格只能显示一行的 bug
+  fixCarousel() {
+    setTimeout(function() {
+      window.dispatchEvent(new Event('resize'))
+    })
   }
   handleSubmit() {
+    if(!this.state.text)
+      return
     const from = this.props.user._id
     const to = this.props.match.params.user
     const msg = this.state.text
@@ -25,25 +36,46 @@ class Chat extends React.Component {
     this.setState({text: ''})
   }
   render() {
-    const user = this.props.match.params.user
+    const emoji = '😀 😁 😂 🤣 😃 😄 😅 😆 😉 😊 😋 😎 😍 😘 🥰 😗 😙 😚 ☺️ 🙂 🤗 🤩 🤔 🤨 😐 😑 😶 🙄 😏 😣 😥 😮 🤐 😯 😪 😫 😴 😌 😛 😜 😝 🤤 😒 😓 😔 😕 🙃 😲 ☹️ 🙁 😖 😞 😟 😤 😢 😭 😦 😧 😨 😩 🤯 😬 😰 😱 😳 🤪 😵 😡 😠 😷 🤒 🤕 🤢 🤮 🤧 😇 🤠 🤡 🥳 🥴 🥺 🤥 🤫 🤭 🧐 🤓 😈 👿'
+                  .split(' ')
+                  .filter(v => v)   // 避免出现连续两个空格
+                  .map(v => ({text: v}))
+    const userid = this.props.match.params.user
     const Item = List.Item
+    const users = this.props.chat.users
+    if (!users[userid]) {
+      return null
+    }
+    const chatid = getChatId(this.props.user._id, userid)
+    const chatMsgs = this.props.chat.chatMsg.filter(v => v.chatid == chatid)
     return (
       <div id="chat-page">
-        <NavBar mode="dark">{user}</NavBar>
-        {this.props.chat.chatMsg.map(v => {
-          return v.from == user? (
+        <NavBar
+          mode="dark"
+          icon={<Icon type="left" />}
+          onLeftClick={() => {
+            this.props.history.goBack()
+          }}
+        >
+          {users[userid].name}
+        </NavBar>
+        <div id="chat-content">
+        {chatMsgs.map(v => {
+          const avatar = require(`../img/${users[v.from].avatar}.png`)
+          return v.from == userid? (
             <List key={v._id}>
-              <Item>{v.content}</Item>
+              <Item thumb={avatar}>{v.content}</Item>
             </List>
           ): (
             <List key={v._id}>
               <Item
                 className='chat-me'
-                extra={'avatar'}
+                extra={<img src={avatar} />}
               >{v.content}</Item>
             </List>
           )
         })}
+        </div>
         <div className="stick-footer">
           <List>
             <InputItem
@@ -52,10 +84,32 @@ class Chat extends React.Component {
               onChange={v => {
                 this.setState({text: v})
               }}
-              extra={<span onClick={() => this.handleSubmit()}>发送</span>}
+              extra={
+                <div>
+                  <span 
+                    style={{marginRight: 15}}
+                    onClick={() => {
+                      this.setState({showEmoji: !this.state.showEmoji})
+                      this.fixCarousel()
+                    }}
+                  >
+                    😀
+                  </span>
+                  <span onClick={() => this.handleSubmit()}>发送</span>
+                </div>
+              }
             >
             </InputItem>
           </List>
+          {this.state.showEmoji? <Grid 
+            data={emoji}
+            columnNum={8}
+            carouselMaxRow={4}
+            isCarousel={true}
+            onClick={el => {
+              this.setState({text: this.state.text + el.text})
+            }}
+          />: null}
         </div>
       </div>
     )

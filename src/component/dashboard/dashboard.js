@@ -6,15 +6,24 @@ import { Switch, Route } from 'react-router-dom'
 import Boss from '../boss/boss'
 import Genius from '../genius/genius'
 import User from '../user/user'
+import { getMsgList, recvMsg } from '../../redux/chat.redux'
 
 function Msg() {
   return <h2>消息列表页面</h2>
 }
 
 @connect(
-  state => state
+  state => state,
+  {getMsgList, recvMsg}
 )
 class DashBoard extends React.Component {
+  componentDidMount() {
+    // 防止多次调用 socket 监听，造成发送的消息在对话列表显示重复
+    if (!this.props.chat.chatMsg.length) {
+      this.props.getMsgList()
+      this.props.recvMsg()
+    }
+  }
   render() {
     const user = this.props.user
     const {pathname} = this.props.location
