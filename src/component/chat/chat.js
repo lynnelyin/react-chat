@@ -1,12 +1,12 @@
 import React from 'react'
 import { List, InputItem, NavBar, Icon, Grid } from 'antd-mobile'
 import { connect } from 'react-redux'
-import { sendMsg, getMsgList, recvMsg } from '../../redux/chat.redux'
+import { sendMsg, getMsgList, recvMsg, readMsg } from '../../redux/chat.redux'
 import { getChatId } from '../../util'
 
 @connect(
   state => state,
-  {sendMsg, getMsgList, recvMsg}
+  {sendMsg, getMsgList, recvMsg, readMsg}
 )
 class Chat extends React.Component {
   constructor(props) {
@@ -19,6 +19,12 @@ class Chat extends React.Component {
       this.props.getMsgList()
       this.props.recvMsg()
     }
+  }
+  // 离开当前页面时再标记已读
+  // 以便在当前页面接收消息时，离开后，不会未读
+  componentWillUnmount() {
+    const to = this.props.match.params.user
+    this.props.readMsg(to)
   }
   // 修复一开始网格只能显示一行的 bug
   fixCarousel() {

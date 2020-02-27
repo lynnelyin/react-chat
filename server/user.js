@@ -88,6 +88,17 @@ Router.get('/msgList', function(req, res) {
   })
 })
 
+Router.post('/readMsg', function(req, res) {
+  const user = req.cookies.userid
+  const {from} = req.body
+  Chat.update({from, to: user}, {$set: {read: true}}, {multi: true}, function(err, doc) {
+    if (!err) {
+      return res.json({code: 0, num: doc.nModified})
+    }
+    return res.json({code: 1, msg: '修改失败'})
+  })
+})
+
 function md5Pwd(pwd) {
   const salt = 'learn_react$&&*BUTDEdk38'
   return utils.md5(utils.md5(pwd + salt))
