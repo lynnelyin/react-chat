@@ -20,10 +20,6 @@ import './index.css'
 
 const store = createStore(reducers, composeWithDevTools(applyMiddleware(thunk)))
 
-function Boss() {
-  return <h2>Boss</h2>
-}
-
 ReactDom.render(<Provider store={store}>
                   <BrowserRouter>
                     <div>
