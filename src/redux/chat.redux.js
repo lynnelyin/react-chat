@@ -52,6 +52,14 @@ function msgRead({from, userid, num}) {
 }
 
 export function readMsg(from) {
+  return async (dispatch, getState) => {
+    const res = await axios.post('/user/readMsg', {from})
+    const userid = getState().user._id
+    if (res.status == 200 && res.data.code == 0) {
+      dispatch(msgRead({from, userid, num: res.data.num}))
+    }
+  }
+  /*
   return (dispatch, getState) => {
     axios.post('/user/readMsg', {from})
           .then(res => {
@@ -61,6 +69,7 @@ export function readMsg(from) {
             }
           })
   }
+  */
 }
 
 export function sendMsg({from, to, msg}) {
