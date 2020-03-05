@@ -15,7 +15,7 @@ import './index.css'
 const store = createStore(reducers, composeWithDevTools(applyMiddleware(thunk)))
 
 if (typeof window !== 'undefined'){
-ReactDom.render(<Provider store={store}>
+ReactDom.hydrate(<Provider store={store}>
                   <BrowserRouter>
                     <App></App>
                   </BrowserRouter>
