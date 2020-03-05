@@ -9,8 +9,20 @@ import AuthRoute from './component/authroute/authroute'
 import {Route, Switch} from 'react-router-dom'
 
 class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      hasError: false
+    }
+  }
+  componentDidCatch(err, info) {
+    console.log('err,info:', err, info)
+    this.setState({
+      hasError: true
+    })
+  }
   render() {
-    return (
+    return this.state.hasError ? <h1>页面出错啦</h1> : (
       <div>
         <AuthRoute></AuthRoute>
         <Switch>
