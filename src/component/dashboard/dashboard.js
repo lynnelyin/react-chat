@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { NavBar } from 'antd-mobile'
 import NavLinkBar from '../navlink/navlink'
-import { Route } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 import Boss from '../boss/boss'
 import Genius from '../genius/genius'
 import User from '../user/user'
@@ -59,10 +59,10 @@ class DashBoard extends React.Component {
     ]
     const page = navList.find(v => v.path == pathname)
     // 让动画生效，只渲染一个Route，根据当前path决定组件
-    return (
+    return (page ? 
       <div>
         <NavBar mode="dark" className="fixed-header">
-          {navList.find(v => v.path == pathname).title}
+          {page.title}
         </NavBar>
         <div style={{marginTop: 45}}>
           <QueueAnim type="scaleX" duration={800}>
@@ -70,7 +70,7 @@ class DashBoard extends React.Component {
           </QueueAnim>
         </div>
         <NavLinkBar data={navList}></NavLinkBar>
-      </div>
+      </div> : <Redirect to="/msg"></Redirect>
     )
   }
 }

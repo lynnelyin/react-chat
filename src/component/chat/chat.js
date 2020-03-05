@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { sendMsg, getMsgList, recvMsg, readMsg } from '../../redux/chat.redux'
 import { getChatId } from '../../util'
 import QueueAnim from 'rc-queue-anim'
+import '../../index.css'
 
 @connect(
   state => state,
@@ -63,6 +64,7 @@ class Chat extends React.Component {
           onLeftClick={() => {
             this.props.history.goBack()
           }}
+          style={{position:'fixed',top:0,zIndex:'100',width:'100%'}}
         >
           {users[userid].name}
         </NavBar>
@@ -85,7 +87,7 @@ class Chat extends React.Component {
         })}
         </QueueAnim>
        
-        <div className="stick-footer">
+        <div style={{position: 'fixed', width: '100%', bottom: 0}}>
           <List>
             <InputItem
               placeholder="请输入"
@@ -127,3 +129,4 @@ class Chat extends React.Component {
 }
 
 export default Chat
+

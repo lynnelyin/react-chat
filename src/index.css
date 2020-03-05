@@ -25,10 +25,6 @@
   touch-action: none;
 }
 
-#chat-page #chat-content{
-  overflow: scroll;
-}
-
 #chat-page .chat-me .am-list-extra{
   flex-basis: auto;
 }
